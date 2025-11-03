@@ -1,0 +1,32 @@
+name: CI - Validate Code on PR
+
+on:
+  pull_request:
+    branches:
+      - dev
+
+jobs:
+  validation:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Validate HTML file
+        run: |
+          echo "🔍 Checking HTML file..."
+          if grep -q "</html>" index.html; then
+            echo "✅ HTML structure looks valid"
+          else
+            echo "❌ Missing HTML closing tag" && exit 1
+          fi
+
+      - name: Validate JS file
+        run: |
+          echo "🔍 Checking JS file..."
+          if grep -q "document.getElementById" script.js; then
+            echo "✅ JS file has event listener"
+          else
+            echo "❌ JS missing event listener" && exit 1
+          fi
